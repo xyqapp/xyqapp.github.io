@@ -66,7 +66,7 @@
     border:1px solid var(--card-border);
     border-radius:26px;
     box-shadow:var(--shadow);
-    padding:46px 38px 34px;
+    padding:44px 36px 32px;
     max-width:420px;
     width:100%;
     text-align:center;
@@ -88,72 +88,75 @@
 
   .chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px;}
   .chip{
-    font-size:12px;
-    color:var(--accent);
-    background:rgba(37,99,235,.09);
-    border-radius:999px;
-    padding:5px 12px;
-    letter-spacing:.2px;
+    font-size:12px;color:var(--accent);background:rgba(37,99,235,.09);
+    border-radius:999px;padding:5px 12px;letter-spacing:.2px;
   }
 
   .btn{
-    display:block;
-    margin-top:26px;
+    display:block;margin-top:24px;
     background:linear-gradient(135deg,#3b82f6,#2563eb);
-    color:#fff;
-    text-decoration:none;
-    font-size:16px;
-    font-weight:600;
-    letter-spacing:.6px;
-    padding:15px 0;
-    border-radius:14px;
+    color:#fff;text-decoration:none;
+    font-size:16px;font-weight:600;letter-spacing:.6px;
+    padding:15px 0;border-radius:14px;
     box-shadow:0 8px 22px rgba(37,99,235,.32);
     transition:transform .18s ease,box-shadow .18s ease;
   }
   .btn:hover{transform:translateY(-2px);box-shadow:0 13px 30px rgba(37,99,235,.4);}
   .btn:active{transform:translateY(0);}
 
-  .meta{margin-top:14px;font-size:12.5px;color:var(--sub);}
+  .meta{margin-top:13px;font-size:12.5px;color:var(--sub);}
+  .copybtn{
+    background:none;border:0;padding:0 4px;margin-left:2px;
+    color:var(--accent);font-size:12.5px;font-family:inherit;cursor:pointer;
+  }
+  .copybtn:hover{text-decoration:underline;}
 
-  details.changelog{margin-top:20px;text-align:left;}
-  details.changelog summary{
-    list-style:none;
-    cursor:pointer;
-    font-size:13.5px;
-    color:var(--accent);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    padding:10px 0;
-    user-select:none;
+  .qrbox{
+    display:none;
+    margin:22px auto 0;
+    background:#fff;
+    border-radius:16px;
+    padding:14px 14px 10px;
+    box-shadow:0 2px 10px rgba(16,32,64,.08);
+    width:fit-content;
   }
-  details.changelog summary::-webkit-details-marker{display:none;}
-  details.changelog summary .arrow{
-    display:inline-block;
-    font-size:10px;
-    transition:transform .2s ease;
+  .qrbox img{display:block;width:132px;height:132px;}
+  .qrbox p{margin-top:7px;font-size:11.5px;color:#7b8794;letter-spacing:.3px;}
+  @media (min-width:641px){ .qrbox{display:block;} }
+
+  details.fold{margin-top:14px;text-align:left;}
+  details.fold summary{
+    list-style:none;cursor:pointer;font-size:13.5px;color:var(--accent);
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    padding:10px 0;user-select:none;
   }
-  details.changelog[open] summary .arrow{transform:rotate(90deg);}
-  details.changelog ul{
-    margin-top:6px;
-    padding:14px 0 4px 18px;
+  details.fold summary::-webkit-details-marker{display:none;}
+  details.fold summary .arrow{display:inline-block;font-size:10px;transition:transform .2s ease;}
+  details.fold[open] summary .arrow{transform:rotate(90deg);}
+  details.fold ul{
+    margin-top:4px;padding:14px 0 4px 18px;
     border-top:1px solid var(--line);
-    font-size:13.5px;
-    line-height:1.95;
-    color:var(--sub);
+    font-size:13.5px;line-height:1.95;color:var(--sub);
   }
+  details.fold li::marker{color:var(--accent);}
 
   .links{
-    margin-top:24px;
-    padding-top:20px;
-    border-top:1px solid var(--line);
-    font-size:13px;
+    margin-top:20px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;
   }
   .links a{color:var(--accent);text-decoration:none;margin:0 11px;}
   .links a:hover{text-decoration:underline;}
 
-  footer{margin-top:18px;font-size:11.5px;color:var(--sub);opacity:.85;line-height:1.7;}
+  footer{margin-top:16px;font-size:11.5px;color:var(--sub);opacity:.85;line-height:1.7;}
+
+  .toast{
+    position:fixed;left:50%;bottom:40px;
+    transform:translate(-50%,14px);
+    background:rgba(17,24,39,.92);color:#fff;
+    font-size:13px;padding:9px 18px;border-radius:999px;
+    opacity:0;pointer-events:none;z-index:99;
+    transition:opacity .24s ease,transform .24s ease;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0);}
 </style>
 </head>
 <body>
@@ -175,10 +178,24 @@
       <span class="chip">V1.4.0.0.111 SP1</span>
     </div>
 
-    <a class="btn" href="https://github.com/xyqapp/yan-browser/releases/download/v1.4.0.0.111/YanBrowser_V1.4.0.0.111_SP1.apk">下载 APK</a>
-    <p class="meta">最新版本 V1.4.0.0.111 SP1 · 适用于 Android 手机</p>
+    <a class="btn" id="apkBtn" href="https://github.com/xyqapp/yan-browser/releases/download/v1.4.0.0.111/YanBrowser_V1.4.0.0.111_SP1.apk">下载 APK</a>
+    <p class="meta">最新版本 V1.4.0.0.111 SP1 · <button class="copybtn" id="copyBtn" type="button">复制下载链接</button></p>
 
-    <details class="changelog">
+    <div class="qrbox">
+      <img src="data:image/png;base64,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" alt="扫码下载雁浏览器 APK" width="132" height="132" loading="lazy">
+      <p>手机扫码直接下载</p>
+    </div>
+
+    <details class="fold">
+      <summary><span class="arrow">▶</span>安装步骤</summary>
+      <ul>
+        <li>在手机上下载 APK 文件</li>
+        <li>打开文件，按提示允许「安装未知来源应用」</li>
+        <li>安装完成后打开即可使用</li>
+      </ul>
+    </details>
+
+    <details class="fold">
       <summary><span class="arrow">▶</span>本次更新内容</summary>
       <ul>
         <li>主页设置 UI 大改</li>
@@ -202,5 +219,46 @@
 
     <footer>© 2026 雁浏览器 · 安装时请允许“安装未知来源应用”</footer>
   </main>
+
+  <div class="toast" id="toast">链接已复制</div>
+
+  <script>
+  (function(){
+    var APK = document.getElementById('apkBtn').getAttribute('href');
+    var toast = document.getElementById('toast');
+    var timer = null;
+
+    function show(msg){
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(timer);
+      timer = setTimeout(function(){ toast.classList.remove('show'); }, 1800);
+    }
+
+    function legacyCopy(){
+      var ta = document.createElement('textarea');
+      ta.value = APK;
+      ta.style.position = 'fixed';
+      ta.style.top = '-1000px';
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch(e){ ok = false; }
+      document.body.removeChild(ta);
+      show(ok ? '下载链接已复制' : '复制失败，请长按链接手动复制');
+    }
+
+    document.getElementById('copyBtn').addEventListener('click', function(){
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(APK).then(
+          function(){ show('下载链接已复制'); },
+          legacyCopy
+        );
+      } else {
+        legacyCopy();
+      }
+    });
+  })();
+  </script>
 </body>
 </html>
